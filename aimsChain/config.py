@@ -85,7 +85,10 @@ class Control(object):
         self.map_unit_cell = False
         #lattice view for 
         self.xyz_lattice = [2,2,1]
-    
+        ## mine
+        self.external_job = False
+        self.external_jobname = 'aims.sub'
+
         self.read()
     
     def read(self, filename = "chain.in"):
@@ -120,7 +123,7 @@ class Control(object):
                 elif inp[0] == "climb_mode":
                     self.climb_mode = int(inp[1])
                 elif inp[0] == "run_aims":
-                    self.run_aims = string.join(inp[1:])
+                    self.run_aims = " ".join(inp[1:])
                 elif inp[0] == "external_geometry":
                     self.ext_geo = inp[1]
                 elif inp[0] == "method":
@@ -188,7 +191,11 @@ class Control(object):
                     self.xyz_lattice = [int(inp[1]), int(inp[2]), int(inp[3])]
                     if len(self.xyz_lattice) != 3:
                         self.xyz_lattice = [2,2,1]
-        
+                elif inp[0] == "external_job":
+                    self.external_job = True
+                    self.external_jobname = inp[1].lower()
+                    self.run_aims = None
+
 
         #assign climbing thres if it's not set
         if self.climb_thres == None:
