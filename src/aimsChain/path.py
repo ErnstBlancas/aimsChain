@@ -3,13 +3,12 @@ This module defines the Path
 Path is a collection of nodes
 Path has all the inter-node functions
 """
-import pdb
 import numpy as np
 from aimsChain.utility import vmag, vunit, vproj
 from aimsChain.config import Control
 from aimsChain.node import Node
 from aimsChain.optimizer.optimize import FDOptimize
-import cPickle as cp
+import pickle as cp
 
 class Path(object):
     """
@@ -59,7 +58,13 @@ class Path(object):
         self.__runs = int(value)
     @property
     def periodic(self):
-        return self.nodes[0].geometry.lattice != None
+        tmp_out = False
+        if not np.all(np.array(self.nodes[0].geometry.lattice) == 0. )  :
+            tmp_out = True
+        #if self.nodes[0].geometry.lattice == None:
+        #    tmp_out = False
+        #print("DEBUG: periodic?:",tmp_out)
+        return tmp_out
     @property
     def lattice_vector(self):
         return self.nodes[0].geometry.lattice
@@ -311,11 +316,14 @@ class Path(object):
             climb_ind = None
             #get all the forces and positions
             #find the index of the climbing image
+            #print('Debug: enumerate(moving_nodes)',enumerate(moving_nodes) )
             for i,node in enumerate(moving_nodes):
+                #print('debug: i,node.climb,i_tmp:',i,node.climb,i_tmp)
                 forces.append(node.climb_forces)
                 positions.append(node.positions)
                 new_t.append(node.param)
                 if node.climb:
+                    #print('climbing index:', i)
                     climb_ind = i
             forces = np.array(forces)
             positions = np.array(positions)
@@ -334,6 +342,7 @@ class Path(object):
                     positions,
                     forces,
                     ".climb.opt")
+            print('Climbing index',climb_ind)
             old_t = (get_t(new_pos[0:climb_ind+1]) 
                      * (moving_nodes[climb_ind].param-moving_nodes[0].param) 
                      + moving_nodes[0].param)
@@ -394,9 +403,16 @@ class Path(object):
         from aimsChain.interpolate import spline_pos
         import copy
         #if we have only two image, then insert them all
+        print('puto 1')
+        cc = 1
         if self.n_nodes() == 2:
             for i in np.linspace(0,1,n+2)[1:-1]:
                 self.insert_node(i)
+                if self.control.chachito:
+                    M = (1-i) * self.nodes[0].geometry.lattice + i * self.nodes[-1].geometry.lattice
+                    self.nodes[cc].geometry.lattice = M
+                cc+=1
+
         #if we want to resample
         #we first add all new coord
         #then remove those that are in orignal but not new
@@ -445,8 +461,8 @@ class Path(object):
         data["dirs"] = dirs
         data["fix"] = fix
         data["climb"] = climb
-
-        save = open(filename,'w')
+        
+        save = open(filename,'wb')
         cp.dump(data,save)
         save.close()
 
@@ -455,7 +471,7 @@ class Path(object):
         Read the file into current path
         """
         nodes = []
-        save = open(filename, 'r')
+        save = open(filename, 'rb')
         data = cp.load(save)
         save.close()
 

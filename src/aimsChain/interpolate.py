@@ -34,7 +34,7 @@ def linear_interp(pos1, pos2, n):
     return np.array(new_pos), new_t
 
 
-def spline_pos(positions, new_t, old_t=None, k = 3, derv = 0):
+def spline_pos(positions, new_t, old_t=[], k = 3, derv = 0):
     """
     Resample the list of positions with a list of
     parametric parameter t.
@@ -50,7 +50,7 @@ def spline_pos(positions, new_t, old_t=None, k = 3, derv = 0):
         k = len(positions) - 1
 
     positions = np.array(positions)
-    if old_t == None:
+    if len(old_t) == 0:
         old_t = get_t(positions)
     else:
         old_t = np.array(old_t)

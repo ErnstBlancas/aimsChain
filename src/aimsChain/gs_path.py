@@ -7,7 +7,7 @@ from aimsChain.path import Path
 from aimsChain.node import Node
 from aimsChain.optimizer.optimize import FDOptimize
 
-import cPickle as cp
+import pickle as cp
 class GrowingStringPath(Path):
 
     def __init__(self, 
@@ -324,7 +324,7 @@ class GrowingStringPath(Path):
         data["climb"] = climb
         data["lower"] = self.lower_end
 
-        save = open(filename,'w')
+        save = open(filename,'wb')
         cp.dump(data,save)
         save.close()
 
@@ -333,8 +333,8 @@ class GrowingStringPath(Path):
         Read the file into current path
         """
         nodes = []
-        save = open(filename, 'r')
-        print 
+        save = open(filename, 'rb')
+        print() 
         data = cp.load(save)
         save.close()
 

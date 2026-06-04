@@ -84,10 +84,11 @@ class Control(object):
         #map back to the central cell?
         self.map_unit_cell = False
         #lattice view for 
-        self.xyz_lattice = [2,2,1]
+        self.xyz_lattice = [2,2,2]
         ## mine
         self.external_job = False
         self.external_jobname = 'aims.sub'
+        self.chachito = False 
 
         self.read()
     
@@ -195,6 +196,9 @@ class Control(object):
                     self.external_job = True
                     self.external_jobname = inp[1].lower()
                     self.run_aims = None
+                elif inp[0] == "chachito":
+                    self.chachito = parse_bool(inp[1])
+
 
 
         #assign climbing thres if it's not set

@@ -131,7 +131,7 @@ class Node(object):
 
     @property
     def spring_forces(self):
-	k = self.control.spring_k
+        k = self.control.spring_k
         if self.fixed:
             return np.zeros(np.shape(self.positions))
         elif self.prev==None or self.next==None:
