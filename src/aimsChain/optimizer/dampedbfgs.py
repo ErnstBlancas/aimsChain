@@ -93,7 +93,7 @@ class dampedBFGS(object):
         """
         dump necessary values for future reference
         """
-        with open(self.restasrt, 'wb') as hess:
+        with open(self.restart, 'wb') as hess:
             cp.dump((self.H, self.r0, self.f0, self.inserted,
                      self.inserted_counter, self.iteration), hess)
 
