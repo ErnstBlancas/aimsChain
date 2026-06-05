@@ -1,5 +1,5 @@
 import numpy as np
-import cPickle as cp
+import pickle as cp
 from aimsChain.utility import vunitproj,vunit
 
 class newFIRE(object):
@@ -34,9 +34,8 @@ class newFIRE(object):
 
     def dump(self):
         """dump necessary values for future reference"""
-        save = open(self.restart, 'w')
-        cp.dump((self.v, self.dt, self.a, self.Nsteps, self.r0, self.delta_r), save)
-        save.close()
+        with open(self.restart, 'wb') as hess:
+            cp.dump((self.v, self.dt, self.a, self.Nsteps, self.r0, self.delta_r), save)
        
     def step(self,r,f):
         r = np.array(r)

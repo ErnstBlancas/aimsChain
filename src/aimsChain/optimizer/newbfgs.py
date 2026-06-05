@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.linalg import eigh, solve
 
-import cPickle as cp
+import pickle as cp
 
 class BFGS(object):
     def __init__(self, restart="hess", maxstep=0.04, 
@@ -50,10 +50,8 @@ class BFGS(object):
         """
         dump necessary values for future reference
         """
-        hess = open(self.restart, 'w')
-        cp.dump((self.H, self.r0, self.f0),
-                hess)
-        hess.close()
+        with open(self.restart, 'wb') as hess:
+            cp.dump((self.H, self.r0, self.f0), hess)
 
     def step(self, r, f):
         """

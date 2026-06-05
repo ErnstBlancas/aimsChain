@@ -1,5 +1,5 @@
 import numpy as np
-import cPickle as cp
+import pickle as cp
 
 
 class FIRE(object):
@@ -35,8 +35,8 @@ class FIRE(object):
     def dump(self):
         """dump necessary values for future reference"""
         save = open(self.restart, 'w')
-        cp.dump((self.v, self.dt, self.a, self.Nsteps), save)
-        save.close()
+        with open(self.restart, 'wb') as hess:
+            cp.dump((self.v, self.dt, self.a, self.Nsteps), save)
        
     def step(self,r,f):
         r = np.array(r)

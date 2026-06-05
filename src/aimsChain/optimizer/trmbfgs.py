@@ -1,5 +1,5 @@
 import numpy as np
-import cPickle as cp
+import pickle as cp
 from numpy.linalg import eigh, solve
 
 from aimsChain.utility import vmag,vunit
@@ -45,9 +45,9 @@ class trm(object):
         dump necessary values for future reference
         """
         hess = open(self.restart, 'w')
-        cp.dump((self.H, self.r0, self.f0,self.delta, self.direc, self.trmpred, self.iteration),
-                hess)
-        hess.close()
+        with open(self.restart, 'wb') as hess:
+            cp.dump((self.H, self.r0, self.f0,self.delta, self.direc,
+                     self.trmpred, self.iteration), hess)
 
     def step(self,r,f):
         """

@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.linalg import eigh, solve
 
-import cPickle as cp
+import pickle as cp
 
 class dampedBFGS(object):
     def __init__(self, restart="hess", maxstep=0.04, 

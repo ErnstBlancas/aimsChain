@@ -2,7 +2,7 @@ import numpy as np
 from aimsChain.utility import vunit,vmag
 from aimsChain.optimizer.optimize import FDOptimize
 
-import cPickle as cp
+import pickle as cp
 
 class CG(FDOptimize):
     def __init__(self, restart="restart", maxstep = 0.04, sec_step = 0.0001, safe_step = 0.04):
@@ -57,20 +57,10 @@ class CG(FDOptimize):
         dump necessary values for future reference
         """
         hess = open(self.restart, 'w')
-        cp.dump((self.kter,
-                 self.prev_alpha,
-                 self.d,
-                 self.r,
-                 self.r_prev,
-                 self.N,
-                 self.x0,
-                 self.x0_prev,
-                 self.prev_step,
-                 self.f_prime,
-                 self.sec_dis,
-                 self.finite_diff),
-                hess)
-        hess.close()
+        with open(self.restart, 'wb') as hess:
+            cp.dump((self.kter, self.prev_alpha, self.d, self.r, self.r_prev,
+                     self.N, self.x0, self.x0_prev, self.prev_step,
+                     self.f_prime, self.sec_dis, self.finite_diff),hess)
 
     def step(self, x, f):
         """

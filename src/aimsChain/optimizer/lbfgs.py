@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 
-import cPickle as cp
+import pickle as cp
 
 
 class LBFGS(object):
@@ -88,9 +88,9 @@ class LBFGS(object):
     def dump(self):
         """dump necessary values for future reference"""
         hess = open(self.restart, 'w')
-        cp.dump((self.iteration, self.s, self.y, 
-                   self.rho, self.r0, self.f0), hess)
-        hess.close()
+        with open(self.restart, 'wb') as hess:
+            cp.dump((self.iteration, self.s, self.y, self.rho, self.r0,
+                     self.f0), hess)
 
     def step(self, r, f):
         """Take a single step
