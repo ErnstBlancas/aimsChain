@@ -59,12 +59,11 @@ class Path(object):
     @property
     def periodic(self):
         tmp_out = False
-        if not np.all(np.array(self.nodes[0].geometry.lattice) == 0. )  :
-            tmp_out = True
-        #if self.nodes[0].geometry.lattice == None:
-        #    tmp_out = False
-        #print("DEBUG: periodic?:",tmp_out)
-        return tmp_out
+        try:
+            if len(nodes[0].geometry.lattice):
+                return True
+        except TypeError:
+            return False
     @property
     def lattice_vector(self):
         return self.nodes[0].geometry.lattice
