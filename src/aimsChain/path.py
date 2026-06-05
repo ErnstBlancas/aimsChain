@@ -58,7 +58,6 @@ class Path(object):
         self.__runs = int(value)
     @property
     def periodic(self):
-        tmp_out = False
         try:
             if len(nodes[0].geometry.lattice):
                 return True
