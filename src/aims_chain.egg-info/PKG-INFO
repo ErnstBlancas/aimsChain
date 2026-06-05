@@ -1,0 +1,23 @@
+Metadata-Version: 2.4
+Name: aims_chain
+Version: 0.2.0
+Summary: A package for finding minimum energy path and transition state.
+License-Expression: LGPL-3.0-or-later
+Project-URL: repository, https://gitlab.com/FHI-aims-club/aims-chain
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: scipy
+Provides-Extra: tests
+Requires-Dist: pytest; extra == "tests"
+Requires-Dist: pytest-cov; extra == "tests"
+Dynamic: license-file
+
+aimsChain
+=========
+aimsChain developed for FHI-aims
+
+A package for finding minimum energy path and transition state 
+
+For usage please refer to FHI-aims manual

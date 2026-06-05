@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/in/env python
 import subprocess, os, shutil, time, glob, sys
 from pathlib import Path
 from typing import List
@@ -38,7 +38,7 @@ def submitter(sbatch_script: str) -> str | None:
         print(f"Error submitting {sbatch_script}: {e.stderr.strip()}")
         return None
 
-def waitter(job_ids: List[str], poll_interval: int = 1):
+def waiter(job_ids: List[str], poll_interval: int = 1):
     if not job_ids:
         print("No jobs to wait for.")
         return
@@ -66,7 +66,7 @@ def submit_and_wait(scripts):
     if not job_ids:
         print("No jobs were submitted successfully. Exiting.")
         sys.exit(1)
-    waitter(job_ids)
+    waiter(job_ids)
     return True
 
 def run_aims(paths):

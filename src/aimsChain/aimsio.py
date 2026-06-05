@@ -59,13 +59,16 @@ def write_aims(filename, atoms):
     geo.write('#=======================================#\n')
     #if atoms.lattice != None:
     try:
+        is_lat = len(atoms.lattice)
+        lat=True
+    except TypeError: 
+        lat = False
+    if lat:
         for vector in atoms.lattice:
             geo.write('lattice_vector ')
             for i in range(3):
                 geo.write('%16.16f ' % vector[i])
             geo.write('\n')
-    except NameError:
-        _ = 0
     
     for atom in atoms.atoms:
         geo.write('atom ')
