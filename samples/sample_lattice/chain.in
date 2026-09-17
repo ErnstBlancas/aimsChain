@@ -1,0 +1,49 @@
+####################################################
+##environment setting
+####################################################
+#specify the command used for single point calculation
+run_aims mpiexec -ppn 8 -n $NSLOTS ~/bin/aims.x
+#initial geometry
+initial_file ini.in
+#final geometry
+final_file fin.in
+
+####################################################
+##General settings for task
+####################################################
+#Method to use, neb/string
+method string
+#number of images to use
+n_images 7
+#convergence criterion for forces, in eV/A
+force_thres 0.05
+#optimizer for neb/string method
+optimizer dampedBFGS
+
+####################################################
+##Lattice relaxation
+####################################################
+#Relax lattice vectors along with atomic positions
+relax_lattice true
+#Lattice constraint: none (all free), diagonal, volume, or combination like "abc"
+lattice_constraint diagonal
+#Scale factor for lattice forces (stress -> eV/A)
+lattice_force_scale 1.0
+
+####################################################
+##Periodic system setting
+####################################################
+#interpolate across periodic boundary
+periodic_interpolation true
+
+####################################################
+##Climbing image setting
+####################################################
+#turn climbing image on/off
+use_climb false
+
+####################################################
+##Growing string method
+####################################################
+#whether to use GS method or not
+use_gs_method false

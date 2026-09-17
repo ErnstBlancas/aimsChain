@@ -53,7 +53,7 @@ class dampedBFGS(object):
     #since global doesn't provide all that much difference
     def insert_node(self, nth, n_atoms):
         self.log("Inserting new node")
-        if self.H == None:
+        if self.H is None:
             return
         loc = int(nth*n_atoms*3)
         H = self.H
@@ -81,13 +81,12 @@ class dampedBFGS(object):
         """
         import os.path as path
         if path.isfile(self.restart):
-            hess = open(self.restart, 'r')
             try:
-                (self.H, self.r0, self.f0, self.inserted, 
-                 self.inserted_counter, self.iteration) = cp.load(hess)
-            except:
+                with open(self.restart, 'rb') as hess:
+                    (self.H, self.r0, self.f0, self.inserted,
+                     self.inserted_counter, self.iteration) = cp.load(hess)
+            except Exception:
                 self.initialize()
-            hess.close()
 
     def dump(self):
         """
@@ -106,7 +105,7 @@ class dampedBFGS(object):
 
 
 
-        if (self.f0 == None) or len(self.f0) == len(f):
+        if (self.f0 is None) or len(self.f0) == len(f):
             self.update(r, f)
         try:
             dr = np.dot(self.H,f)

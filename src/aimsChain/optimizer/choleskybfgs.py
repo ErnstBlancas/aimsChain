@@ -48,7 +48,7 @@ class choleskyBFGS(object):
         
     def insert_node(self, nth, n_atoms):
         self.log("Inserting new node")
-        if self.H == None:
+        if self.H is None:
             return
         loc = int(nth*n_atoms*3)
         H = self.H
@@ -75,13 +75,12 @@ class choleskyBFGS(object):
         """
         import os.path as path
         if path.isfile(self.restart):
-            hess = open(self.restart, 'r')
             try:
-                (self.H, self.r0, self.f0, self.inserted, 
-                 self.inserted_counter, self.iteration) = cp.load(hess)
-            except:
+                with open(self.restart, 'rb') as hess:
+                    (self.H, self.r0, self.f0, self.inserted,
+                     self.inserted_counter, self.iteration) = cp.load(hess)
+            except Exception:
                 self.initialize()
-            hess.close()
 
     def dump(self):
         """
@@ -101,7 +100,7 @@ class choleskyBFGS(object):
         r = np.array(r)
         f = np.array(f).flatten()
         
-        if (self.f0 == None) or len(self.f0) == len(f):
+        if (self.f0 is None) or len(self.f0) == len(f):
             self.update(r, f)
 
         chole = np.linalg.cholesky(self.H)

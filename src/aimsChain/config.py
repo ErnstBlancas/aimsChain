@@ -85,6 +85,10 @@ class Control(object):
         self.map_unit_cell = False
         #lattice view for 
         self.xyz_lattice = [2,2,2]
+        # Lattice relaxation
+        self.relax_lattice = False
+        self.lattice_constraint = "none"  # "none", "diagonal", "volume", "abc"
+        self.lattice_force_scale = 1.0    # scale factor for lattice forces (stress -> force)
         ## mine
         self.external_job = False
         self.external_jobname = 'aims.sub'
@@ -192,6 +196,12 @@ class Control(object):
                     self.xyz_lattice = [int(inp[1]), int(inp[2]), int(inp[3])]
                     if len(self.xyz_lattice) != 3:
                         self.xyz_lattice = [2,2,1]
+                elif inp[0] == "relax_lattice":
+                    self.relax_lattice = parse_bool(inp[1])
+                elif inp[0] == "lattice_constraint":
+                    self.lattice_constraint = str(inp[1])
+                elif inp[0] == "lattice_force_scale":
+                    self.lattice_force_scale = float(inp[1])
                 elif inp[0] == "external_job":
                     self.external_job = True
                     self.external_jobname = inp[1].lower()

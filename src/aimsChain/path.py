@@ -59,7 +59,7 @@ class Path(object):
     @property
     def periodic(self):
         try:
-            if len(nodes[0].geometry.lattice):
+            if len(self.nodes[0].geometry.lattice):
                 return True
         except TypeError:
             return False
@@ -78,7 +78,7 @@ class Path(object):
         geometry will be read
         """
         import os
-        from aimsChain.aimsio import read_aims_output, read_aims
+        from aimsChain.aimsio import read_aims_output, read_aims, stress_to_lattice_forces
         for node in self.nodes:
             dir = os.path.join(node.dir_pre, node.dir)
             geo_path = os.path.join(dir, "geometry.in")
@@ -87,9 +87,15 @@ class Path(object):
             atoms = read_aims(geo_path)
             node.geometry = atoms
             if os.path.isfile(output_path):
-                ener,forces = read_aims_output(output_path)
+                ener,forces,stress = read_aims_output(output_path)
                 node.ener = ener
                 node.forces = forces
+                if stress is not None and atoms.lattice is not None:
+                    node.geometry.lattice_forces = stress_to_lattice_forces(
+                        stress, atoms.lattice, self.control.lattice_force_scale)
+            # Initialize lattice constraint from control if relax_lattice is enabled
+            if self.control.relax_lattice and atoms.lattice is not None:
+                atoms.lattice_constraint = self.control.lattice_constraint
 
     def write_node(self, control_file="control.in"):
         """
@@ -397,19 +403,19 @@ class Path(object):
     def interpolate(self, n):
         """
         interpolate/resample the current path
+        
+        When relax_lattice is enabled and the system has lattice vectors,
+        the lattice vectors are interpolated together with atomic positions
+        via the combined position arrays.
         """
         from aimsChain.interpolate import spline_pos
         import copy
         #if we have only two image, then insert them all
-        print('puto 1')
-        cc = 1
         if self.n_nodes() == 2:
             for i in np.linspace(0,1,n+2)[1:-1]:
                 self.insert_node(i)
-                if self.control.chachito:
-                    M = (1-i) * self.nodes[0].geometry.lattice + i * self.nodes[-1].geometry.lattice
-                    self.nodes[cc].geometry.lattice = M
-                cc+=1
+                # Lattice interpolation is handled automatically by insert_node
+                # when relax_lattice is enabled (positions include lattice vectors)
 
         #if we want to resample
         #we first add all new coord

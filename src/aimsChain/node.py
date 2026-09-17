@@ -86,20 +86,45 @@ class Node(object):
     def ener(self, ener):
         self.__geometry.ener = float(ener)
     
+    def _use_lattice_relax(self):
+        """
+        Check if lattice relaxation should be used for this node.
+        Returns True if relax_lattice is enabled AND geometry has a lattice.
+        """
+        try:
+            if (self.control.relax_lattice and 
+                self.__geometry.lattice is not None):
+                return True
+        except (AttributeError, TypeError):
+            pass
+        return False
+
     @property
     def positions(self):
+        if self._use_lattice_relax():
+            return self.__geometry.all_positions
         return self.__geometry.positions
     @positions.setter
     def positions(self, positions):
         if not self.__fixed:
-            self.__geometry.positions = positions
+            positions = np.array(positions)
+            if self._use_lattice_relax():
+                self.__geometry.all_positions = positions
+            else:
+                self.__geometry.positions = positions
     
     @property
     def forces(self):
         if self.fixed:
-            return np.zeros(np.shape(self.geometry.forces))
+            if self._use_lattice_relax():
+                return np.zeros(np.shape(self.__geometry.all_forces))
+            else:
+                return np.zeros(np.shape(self.geometry.forces))
         else:
-            return self.geometry.forces
+            if self._use_lattice_relax():
+                return self.__geometry.all_forces
+            else:
+                return self.geometry.forces
     @forces.setter
     def forces(self, forces):
         self.__geometry.forces = forces
@@ -121,7 +146,10 @@ class Node(object):
     @property
     def normal_forces(self):
         if self.fixed:
-            return np.zeros(np.shape(self.geometry.forces))
+            if self._use_lattice_relax():
+                return np.zeros(np.shape(self.__geometry.all_forces))
+            else:
+                return np.zeros(np.shape(self.geometry.forces))
         elif self.prev == None or self.next == None:
             return self.forces
         forces = self.forces

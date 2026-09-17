@@ -33,18 +33,16 @@ class trm(object):
     def load(self):
         import os.path as path
         if path.isfile(self.restart):
-            hess = open(self.restart, 'r')
             try:
-                self.H, self.r0, self.f0,self.delta,self.direc,self.trmpred,self.iteration  = cp.load(hess)
-            except:
+                with open(self.restart, 'rb') as hess:
+                    self.H, self.r0, self.f0,self.delta,self.direc,self.trmpred,self.iteration  = cp.load(hess)
+            except Exception:
                 self.initialize()
-            hess.close()
 
     def dump(self):
         """
         dump necessary values for future reference
         """
-        hess = open(self.restart, 'w')
         with open(self.restart, 'wb') as hess:
             cp.dump((self.H, self.r0, self.f0,self.delta, self.direc,
                      self.trmpred, self.iteration), hess)

@@ -28,13 +28,12 @@ class newFIRE(object):
         """load saved velocity and dt from file"""
         import os.path as path
         if path.isfile(self.restart):
-            save = open(self.restart,'r')
-            self.v, self.dt, self.a, self.Nsteps, self.r0, self.delta_r = cp.load(save)
-            save.close()
+            with open(self.restart, 'rb') as save:
+                self.v, self.dt, self.a, self.Nsteps, self.r0, self.delta_r = cp.load(save)
 
     def dump(self):
         """dump necessary values for future reference"""
-        with open(self.restart, 'wb') as hess:
+        with open(self.restart, 'wb') as save:
             cp.dump((self.v, self.dt, self.a, self.Nsteps, self.r0, self.delta_r), save)
        
     def step(self,r,f):

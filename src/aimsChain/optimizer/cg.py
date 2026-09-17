@@ -34,29 +34,27 @@ class CG(FDOptimize):
         """
         import os.path as path
         if path.isfile(self.restart):
-            hess = open(self.restart, 'r')
             try:
-                (self.kter,
-                 self.prev_alpha,
-                 self.d,
-                 self.r,
-                 self.r_prev,
-                 self.N,
-                 self.x0,
-                 self.x0_prev,
-                 self.prev_step,
-                 self.f_prime,
-                 self.sec_dis,
-                 self.finite_diff) = cp.load(hess)
-            except:
+                with open(self.restart, 'rb') as hess:
+                    (self.kter,
+                     self.prev_alpha,
+                     self.d,
+                     self.r,
+                     self.r_prev,
+                     self.N,
+                     self.x0,
+                     self.x0_prev,
+                     self.prev_step,
+                     self.f_prime,
+                     self.sec_dis,
+                     self.finite_diff) = cp.load(hess)
+            except Exception:
                 self.initialize()
-            hess.close()
 
     def dump(self):
         """
         dump necessary values for future reference
         """
-        hess = open(self.restart, 'w')
         with open(self.restart, 'wb') as hess:
             cp.dump((self.kter, self.prev_alpha, self.d, self.r, self.r_prev,
                      self.N, self.x0, self.x0_prev, self.prev_step,
@@ -73,13 +71,13 @@ class CG(FDOptimize):
         if self.N != None and np.shape(x) != np.shape(self.x0):
             self.initialize()
 
-        if self.N == None: #degree of freedom
+        if self.N is None: #degree of freedom
             self.N = int(len(f)) #threshold set for restarting
-        if self.d == None: #initial direction
+        if self.d is None: #initial direction
             self.d = force
-        if self.r_prev == None:
+        if self.r_prev is None:
             self.r_prev = force
-        if self.x0_prev == None:
+        if self.x0_prev is None:
             self.x0_prev = np.zeros(np.shape(x))
 
         if not self.finite_diff:

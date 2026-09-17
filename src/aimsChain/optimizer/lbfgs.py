@@ -80,14 +80,12 @@ class LBFGS(object):
         """Load saved arrays to reconstruct the Hessian"""
         import os.path as path
         if path.isfile(self.restart):
-            hess = open(self.restart, 'r')
-            self.iteration, self.s, self.y, self.rho, \
-                self.r0, self.f0 = cp.load(hess)
-            hess.close()
+            with open(self.restart, 'rb') as hess:
+                self.iteration, self.s, self.y, self.rho, \
+                    self.r0, self.f0 = cp.load(hess)
 
     def dump(self):
         """dump necessary values for future reference"""
-        hess = open(self.restart, 'w')
         with open(self.restart, 'wb') as hess:
             cp.dump((self.iteration, self.s, self.y, self.rho, self.r0,
                      self.f0), hess)
@@ -189,8 +187,8 @@ class LBFGS(object):
         """
         r = np.array(r)
         f = np.array(f)
-        if r0 == None:
-            if self.r0 == None:
+        if r0 is None:
+            if self.r0 is None:
                 self.r0 = r.copy()
                 self.f0 = f.copy()
             else:
