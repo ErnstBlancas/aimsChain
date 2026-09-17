@@ -387,6 +387,8 @@ def main():
         forcelog.flush()
 
 
+    stopped_early = False
+
     if restart_stage == "mep":
         while force > control.thres:
             run_aims(path_to_run)
@@ -400,10 +402,25 @@ def main():
             forcelog.write('iteration%04d\t%16.10f\n' % (curr_runs,force))
             forcelog.flush()
             path.write_path("iterations/path.dat")
-        force = 10.0
-        forcelog.write("System has converged.\n")
+            if (force > control.thres and control.max_iters
+                    and path.runs >= control.max_iters):
+                stopped_early = True
+                break
+        if stopped_early:
+            forcelog.write("Stopped at max_iters = %d without converging.\n"
+                           % control.max_iters)
+        else:
+            force = 10.0
+            forcelog.write("System has converged.\n")
 
     forcelog.close()
+
+    if stopped_early:
+        print("Stopped: max_iters = %d reached, residual force %.6f > %.6f.\n"
+              "Path is NOT converged - 'optimized' was not written; the last\n"
+              "state is in paths/iteration%04d." % (control.max_iters, force,
+                                                   control.thres, path.runs))
+        return
 
     if control.use_climb:
         forcelog = open("climbing_forces.log", 'a')
@@ -432,6 +449,18 @@ def main():
             forcelog.write('iteration%04d\t%16.16f \n' % (curr_runs, force))
             forcelog.flush()
             path.write_path("iterations/path.dat")
+            if (force > control.climb_thres and control.max_iters
+                    and path.runs >= control.max_iters):
+                stopped_early = True
+                break
+        if stopped_early:
+            forcelog.write("Stopped at max_iters = %d without converging.\n"
+                           % control.max_iters)
+            forcelog.close()
+            print("Stopped: max_iters = %d reached during the climbing stage,\n"
+                  "residual force %.6f > %.6f. 'optimized' was not written."
+                  % (control.max_iters, force, control.climb_thres))
+            return
         forcelog.write('Climbing image has converged.\n')
         forcelog.close()
 

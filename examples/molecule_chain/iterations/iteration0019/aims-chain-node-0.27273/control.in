@@ -1,0 +1,26 @@
+# FHI-aims control file for the molecule_chain example.
+#
+# aimsChain drives the geometry/cell optimization; FHI-AIMS is used only
+# for single-point evaluations of the energy, the atomic forces and the
+# stress tensor.  Do NOT add relax_geometry here — a FHI-AIMS geometry
+# relaxation would fight the string method.
+#
+# Tune the functional/basis (defaults: PBE, "light" basis per species)
+# and the SCF accuracy for your production runs.
+
+xc                         pbe
+spin                        none
+relativistic                atomic_zora scalar
+
+# Required for the lattice optimization: run_chain.py converts this
+# stress tensor (eV/A^3) into forces on the lattice vectors.
+compute_analytical_stress   .true.
+
+# 96-atom molecular crystal cell (~920 A^3), S/C/H
+k_grid                      2 2 2
+
+# SCF tightness for reliable forces/stress
+sc_accuracy_ee              1e-5
+sc_accuracy_rho             1e-5
+sc_accuracy_etot            1e-6
+sc_accuracy_forces          1e-4

@@ -1,0 +1,3 @@
+# Dummy FHI-aims control file — not used by the ASE-based example.
+# aimsChain's write_node() copies this file alongside the geometry,
+# but the ASE calculator ignores it.

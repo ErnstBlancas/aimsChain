@@ -1,0 +1,12 @@
+# Python environment for the aimsChain molecule_chain example (run_chain.py).
+#
+# aimsChain itself needs numpy + scipy; the ASE backend (--engine ase, used
+# for testing without FHI-AIMS) needs ase.
+#
+# Locally tested with Python 3.14: numpy 2.5.2, scipy 1.18.1, ase 3.29.0.
+# Lower bounds are loose so the same file works on older cluster pythons
+# (>= 3.10, see aimsChain pyproject.toml).
+
+numpy>=1.24
+scipy>=1.10
+ase>=3.23

@@ -1,0 +1,13 @@
+initial_file ini.in
+final_file fin.in
+n_images 15
+force_thres 0.02
+method string
+optimizer dampedBFGS
+bfgs_maxstep 0.01
+bfgs_alpha 70.0
+periodic_interpolation true
+restart false
+relax_lattice true
+lattice_constraint a
+lattice_force_scale 0.02

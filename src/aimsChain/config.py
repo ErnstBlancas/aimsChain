@@ -21,6 +21,8 @@ class Control(object):
         self.periodic_interp = False
         #threshold for convergence
         self.thres = 0.2
+        #stop after this many iterations even if not converged; 0 = no limit
+        self.max_iters = 20
         #threshold for convergence
         self.gs_thres = None
         #threshold for climbing image convergence
@@ -117,6 +119,8 @@ class Control(object):
                     self.gs_nimage = int(inp[1])
                 elif inp[0] == "force_thres":
                     self.thres = float(inp[1])
+                elif inp[0] == "max_iters":
+                    self.max_iters = int(inp[1])
                 elif inp[0] == "climb_thres":
                     self.climb_thres = float(inp[1])
                 elif inp[0] == "gs_thres":

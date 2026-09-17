@@ -1,0 +1,36 @@
+# ============================================================================
+# molecule_chain — string-method MEP between ini.in and fin.in (96-atom
+# molecular crystal, S/C/H) with full relaxation of atomic positions AND
+# the lattice cell.  FHI-AIMS supplies single-point energies/forces/stress
+# through the SLURM submitter/waiter (see tools/runchain.py).
+# ============================================================================
+
+initial_file ini.in
+final_file fin.in
+n_images 10
+
+# Convergence: residual force (incl. lattice forces) in eV/A
+force_thres 0.05
+
+method string
+optimizer dampedBFGS
+bfgs_maxstep 0.04
+bfgs_alpha 120.0
+
+periodic_interpolation true
+restart false
+
+# --- Lattice relaxation -----------------------------------------------------
+# relax_lattice  : optimize the 9 lattice-vector components together with
+#                  the atomic positions
+# lattice_constraint : none (all 9 free), diagonal, volume, or "abc"
+# lattice_force_scale : damping factor on the physical cell forces
+#                  F_lat = -V * sigma * h^-T   (1.0 = undamped)
+relax_lattice true
+lattice_constraint none
+lattice_force_scale 1.0
+
+# --- FHI-AIMS external jobs -------------------------------------------------
+# Submit one FHI-AIMS single point per node through tools/runchain.py's
+# submitter (sbatch) and waiter (squeue), using this job template.
+external_job aims.sub
